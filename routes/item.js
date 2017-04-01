@@ -1,28 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var mongojs = require('mongojs');
+
+// Connect the Database
 var db = mongojs('<mongolab link goes here>, ['item']);
 
-// READ
-// --Get All Items
-router.get('/items', function(req,res,next){
-	db.items.find(function(err, items){
-		if(err){
-			res.send(err);
-		}
-		res.json(items);
-	})
-});
-// --Get One Item
-router.get('/item/:id', function(req,res,next){
-	db.items.findOne({_id: mongojs.ObjectId(req.params.id)}, function(err, item){
-		if(err){
-			res.send(err);
-		}
-		res.json(item);
-	})
-});
-// Create item
+// Create
 router.post('/items', function(req,res,next){
 	var item = req.body;
 	if(!item.title){
@@ -39,7 +22,28 @@ router.post('/items', function(req,res,next){
 		});
 	}
 });
-// Update One item
+
+// READ
+	// Get All Items
+router.get('/items', function(req,res,next){
+	db.items.find(function(err, items){
+		if(err){
+			res.send(err);
+		}
+		res.json(items);
+	})
+});
+	// Get One Item
+router.get('/item/:id', function(req,res,next){
+	db.items.findOne({_id: mongojs.ObjectId(req.params.id)}, function(err, item){
+		if(err){
+			res.send(err);
+		}
+		res.json(item);
+	})
+});
+
+// Update
 router.put('/item/:id', function(req,res,next){
 	var item = req.body;
 	var upditem = {};
@@ -60,7 +64,8 @@ router.put('/item/:id', function(req,res,next){
 		});
 	}
 });
-// Destroy One item
+
+// Destroy
 router.delete('/item/:id', function(req,res,next){
 	db.items.remove({_id: mongojs.ObjectId(req.params.id)}, function(err, item){
 		if(err){
@@ -69,6 +74,5 @@ router.delete('/item/:id', function(req,res,next){
 		res.json(item);
 	})
 });
-
 
 module.exports = router;
